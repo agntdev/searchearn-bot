@@ -1,19 +1,15 @@
 [
   {
-    "name": "Approve Withdrawal",
+    "name": "Approve Withdrawal without ID shows error",
     "steps": [
       {
+        "send": { "callback": "admin:approve_withdrawal" },
         "expect": [
           {
             "method": "sendMessage",
-            "payload": {
-              "text": "Admin action to approve and record payout"
-            }
+            "payload": { "text": "No pending withdrawal specified." }
           }
-        ],
-        "send": {
-          "callback": "admin:approve_withdrawal"
-        }
+        ]
       }
     ]
   }

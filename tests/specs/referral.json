@@ -1,19 +1,18 @@
 [
   {
-    "name": "/referral",
+    "name": "/referral shows referral info",
     "steps": [
       {
+        "send": { "text": "/start" },
         "expect": [
-          {
-            "method": "sendMessage",
-            "payload": {
-              "text": "Show referral link and statistics"
-            }
-          }
-        ],
-        "send": {
-          "text": "/referral"
-        }
+          { "method": "sendMessage", "payload": { "text": "👋 Welcome! Tap a button below to get started.\n\nYour balance: $0.00" } }
+        ]
+      },
+      {
+        "send": { "text": "/referral" },
+        "expect": [
+          { "method": "sendMessage" }
+        ]
       }
     ]
   }

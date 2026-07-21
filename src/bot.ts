@@ -2,11 +2,21 @@ import { Composer } from "grammy";
 import { createBot, type BotContext } from "./toolkit/index.js";
 import type { StorageAdapter } from "grammy";
 
-// The per-chat session shape (ephemeral conversation state only). Extend as the
-// bot grows. Durable domain data must NOT live here — use the toolkit's
-// persistent storage (see AGENTS.md).
+// The per-chat session shape. Durable domain data (user records, referrals,
+// search history, withdrawals) lives in `data` — backed by the toolkit's
+// persistent storage (Redis in production, in-memory in dev/test).
 export interface Session {
-  // example: step?: "awaiting_amount";
+  step?: string;
+  expiresAt?: number;
+  userId?: number;
+  withdrawalAmount?: number;
+  withdrawalMethod?: string;
+  data: {
+    users: Record<number, import("./data.js").UserRecord>;
+    referrals: Record<number, import("./data.js").ReferralRecord>;
+    search_entries: import("./data.js").SearchEntry[];
+    withdrawals: Record<string, import("./data.js").WithdrawalRequest>;
+  };
 }
 
 export type Ctx = BotContext<Session>;
@@ -42,7 +52,9 @@ export interface BuildBotOptions {
  */
 export async function buildBot(token: string, opts: BuildBotOptions = {}) {
   const bot = createBot<Session>(token, {
-    initial: () => ({}),
+    initial: () => ({
+      data: { users: {}, referrals: {}, search_entries: [], withdrawals: {} },
+    }),
     storage: opts.storage,
   });
 

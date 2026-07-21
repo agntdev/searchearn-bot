@@ -1,19 +1,15 @@
 [
   {
-    "name": "/search",
+    "name": "/search prompts for a query",
     "steps": [
       {
+        "send": { "text": "/search" },
         "expect": [
           {
             "method": "sendMessage",
-            "payload": {
-              "text": "Prompt for search query and return results"
-            }
+            "payload": { "text": "Prompt for search query and return results" }
           }
-        ],
-        "send": {
-          "text": "/search"
-        }
+        ]
       }
     ]
   }
