@@ -1,19 +1,15 @@
 [
   {
-    "name": "Reject Withdrawal",
+    "name": "Reject Withdrawal without ID shows error",
     "steps": [
       {
+        "send": { "callback": "admin:reject_withdrawal" },
         "expect": [
           {
             "method": "sendMessage",
-            "payload": {
-              "text": "Admin action to reject withdrawal request"
-            }
+            "payload": { "text": "No pending withdrawal specified." }
           }
-        ],
-        "send": {
-          "callback": "admin:reject_withdrawal"
-        }
+        ]
       }
     ]
   }

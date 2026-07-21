@@ -1,19 +1,18 @@
 [
   {
-    "name": "/withdraw",
+    "name": "/withdraw checks balance",
     "steps": [
       {
+        "send": { "text": "/start" },
         "expect": [
-          {
-            "method": "sendMessage",
-            "payload": {
-              "text": "Initiate withdrawal request flow"
-            }
-          }
-        ],
-        "send": {
-          "text": "/withdraw"
-        }
+          { "method": "sendMessage", "payload": { "text": "👋 Welcome! Tap a button below to get started.\n\nYour balance: $0.00" } }
+        ]
+      },
+      {
+        "send": { "text": "/withdraw" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "You need at least $10.00 to withdraw. Your balance is $0.00." } }
+        ]
       }
     ]
   }

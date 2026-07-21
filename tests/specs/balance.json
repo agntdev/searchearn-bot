@@ -1,19 +1,18 @@
 [
   {
-    "name": "/balance",
+    "name": "/balance shows balance breakdown",
     "steps": [
       {
+        "send": { "text": "/start" },
         "expect": [
-          {
-            "method": "sendMessage",
-            "payload": {
-              "text": "Display real-time balance breakdown"
-            }
-          }
-        ],
-        "send": {
-          "text": "/balance"
-        }
+          { "method": "sendMessage", "payload": { "text": "👋 Welcome! Tap a button below to get started.\n\nYour balance: $0.00" } }
+        ]
+      },
+      {
+        "send": { "text": "/balance" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "💰 Balance breakdown\n\nAvailable: $0.00\nEarned from referrals: $0.00\nPending referrals: $0.00\nPending withdrawals: $0.00\n\nEach valid referral earns you $0.01. Referrals are credited after 24 hours." } }
+        ]
       }
     ]
   }

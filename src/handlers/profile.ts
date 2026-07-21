@@ -1,15 +1,69 @@
 import { Composer } from "grammy";
+import type { Ctx } from "../bot.js";
+import { inlineButton, inlineKeyboard } from "../toolkit/index.js";
+import { centsToUsd } from "../data.js";
 
-// SCAFFOLD — generated from the bot blueprint BEFORE the agent runs.
-// Keep a LIVE registration (.command / .callbackQuery / …) so this feature is
-// never an empty stub. Replace the reply body with real logic + copy; if you
-// change the user-facing text, update tests/specs to match EXACTLY.
-// Do NOT rewrite src/bot.ts — buildBot() already auto-loads this module.
-
-const composer = new Composer();
+const composer = new Composer<Ctx>();
 
 composer.command("profile", async (ctx) => {
-  await ctx.reply("Display user profile with balance, referral stats, and dark/light toggle");
+  const userId = ctx.from?.id;
+  if (!userId) return;
+  const user = ctx.session.data.users[userId];
+  if (!user) {
+    await ctx.reply("Tap /start to begin.", {
+      reply_markup: inlineKeyboard([
+        [inlineButton("⬅️ Back to menu", "menu:main")],
+      ]),
+    });
+    return;
+  }
+
+  const referredCount = user.referral_ids.length;
+  const creditedCount = Object.values(ctx.session.data.referrals).filter(
+    (r) => r.referrer_id === userId && r.status === "credited",
+  ).length;
+  const pendingCount = referredCount - creditedCount;
+
+  const themeLabel = user.theme === "dark" ? "🌙 Dark" : "☀️ Light";
+  const nextTheme = user.theme === "dark" ? "light" : "dark";
+
+  const text =
+    `👤 Your profile\n\n` +
+    `Balance: ${centsToUsd(user.balance_cents)}\n` +
+    `Referrals: ${creditedCount} earned, ${pendingCount} pending\n\n` +
+    `Theme: ${themeLabel}`;
+
+  await ctx.reply(text, {
+    reply_markup: inlineKeyboard([
+      [inlineButton(`Toggle theme (${nextTheme})`, "profile:toggle_theme")],
+      [inlineButton("⬅️ Back to menu", "menu:main")],
+    ]),
+  });
+});
+
+composer.callbackQuery("profile:toggle_theme", async (ctx) => {
+  await ctx.answerCallbackQuery();
+  const userId = ctx.from?.id;
+  if (!userId) return;
+  const user = ctx.session.data.users[userId];
+  if (!user) return;
+
+  user.theme = user.theme === "dark" ? "light" : "dark";
+  const themeLabel = user.theme === "dark" ? "🌙 Dark" : "☀️ Light";
+  const nextTheme = user.theme === "dark" ? "light" : "dark";
+
+  const text =
+    `👤 Your profile\n\n` +
+    `Balance: ${centsToUsd(user.balance_cents)}\n` +
+    `Referrals: ${user.referral_ids.length} total\n\n` +
+    `Theme: ${themeLabel}`;
+
+  await ctx.editMessageText(text, {
+    reply_markup: inlineKeyboard([
+      [inlineButton(`Toggle theme (${nextTheme})`, "profile:toggle_theme")],
+      [inlineButton("⬅️ Back to menu", "menu:main")],
+    ]),
+  });
 });
 
 export default composer;

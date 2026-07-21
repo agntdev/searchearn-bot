@@ -1,19 +1,18 @@
 [
   {
-    "name": "/profile",
+    "name": "/profile shows user profile",
     "steps": [
       {
+        "send": { "text": "/start" },
         "expect": [
-          {
-            "method": "sendMessage",
-            "payload": {
-              "text": "Display user profile with balance, referral stats, and dark/light toggle"
-            }
-          }
-        ],
-        "send": {
-          "text": "/profile"
-        }
+          { "method": "sendMessage", "payload": { "text": "👋 Welcome! Tap a button below to get started.\n\nYour balance: $0.00" } }
+        ]
+      },
+      {
+        "send": { "text": "/profile" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "👤 Your profile\n\nBalance: $0.00\nReferrals: 0 earned, 0 pending\n\nTheme: ☀️ Light" } }
+        ]
       }
     ]
   }
