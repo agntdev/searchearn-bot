@@ -1,0 +1,20 @@
+[
+  {
+    "name": "/profile",
+    "steps": [
+      {
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Display user profile with balance, referral stats, and dark/light toggle"
+            }
+          }
+        ],
+        "send": {
+          "text": "/profile"
+        }
+      }
+    ]
+  }
+]
