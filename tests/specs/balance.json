@@ -1,0 +1,20 @@
+[
+  {
+    "name": "/balance",
+    "steps": [
+      {
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Display real-time balance breakdown"
+            }
+          }
+        ],
+        "send": {
+          "text": "/balance"
+        }
+      }
+    ]
+  }
+]
